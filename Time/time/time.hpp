@@ -8,7 +8,7 @@ private:
 	int _hours;
 	static unsigned count;
 public:
-	Time();
+	Time() noexcept;
 	~Time();
 	Time(const Time &t);
 	Time(int sec, int min, int hr);

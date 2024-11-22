@@ -4,7 +4,7 @@
 
 unsigned Time::count = 0;
 
-Time::Time() {
+Time::Time() noexcept{
 	this->_seconds = 0;
 	this->_minutes = 0;
 	this->_hours = 0;
