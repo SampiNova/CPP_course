@@ -21,5 +21,10 @@ else()
 	target_link_libraries(test PRIVATE gtest pthread)
 endif()
 
+enable_testing()
+
 target_link_libraries(test PUBLIC Time)
+
+include(GoogleTest)
+gtest_discover_tests(test)
 
