@@ -16,5 +16,13 @@ int main() {
 
 	cout << b << "\n";
 
+	cout << "==============\n";
+
+	Time* empty_time = new Time;
+
+	cout << *empty_time << "\n";
+
+	delete empty_time;
+
 	return 0;
 }

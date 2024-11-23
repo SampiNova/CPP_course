@@ -3,35 +3,45 @@
 #include <algorithm>
 
 unsigned Time::count = 0;
+unsigned Time::actual_id = 0;
 
 Time::Time() noexcept{
 	this->_seconds = 0;
 	this->_minutes = 0;
 	this->_hours = 0;
 	this->count++;
-	std::cout << "Zero constructor was called.\nCount of Time: " << this->count << "\n";
+	this->_id = this->actual_id;
+	this->actual_id++;
+	std::cout << "Zero constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
 }
 
 Time::~Time() {
 	this->count--;
-	std::cout << "Destructor was called.\nCount of Time: " << this->count << "\n";
+	std::cout << "Destructor was called. Object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
 }
 
-Time::Time(const Time &t) {
+Time::Time(const Time &t) noexcept{
 	this->_seconds = t.get_seconds();
 	this->_minutes = t.get_minutes();
 	this->_hours = t.get_hours();
 	this->count++;
-	std::cout << "Copying constructor was called.\nCount of Time: " << this->count << "\n";
+	this->_id = this->actual_id;
+	this->actual_id++;
+	std::cout << "Copying constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
 }
 
 Time::Time(int sec, int min, int hr) {
+	if (sec < 0) throw "Wrong seconds argument!";
+	if (min < 0) throw "Wrong minutes argument!";
+	if (hr < 0) throw "Wrong hours argument!";
 	this->_seconds = sec;
 	this->_minutes = min;
 	this->_hours = hr;
 	this->normalize();
 	this->count++;
-	std::cout << "Full constructor was called.\nCount of Time: " << this->count << "\n";
+	this->_id = this->actual_id;
+	this->actual_id++;
+	std::cout << "Full constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
 }
 
 int Time::to_seconds() {
@@ -52,26 +62,32 @@ void Time::normalize() {
 }
 
 void Time::set_seconds(int sec) {
+	if (sec < 0) throw "Wrong seconds!";
 	this->_seconds = sec;
+	this->normalize();
 }
 
 void Time::set_minutes(int min) {
+	if (min < 0) throw "Wrong minutes!";
 	this->_minutes = min;
+	this->normalize();
 }
 
 void Time::set_hours(int hr) {
+	if (hr < 0) throw "Wrong hours!";
 	this->_hours = hr;
+	this->normalize();
 }
 
-int Time::get_seconds() const {
+int Time::get_seconds() const noexcept {
 	return this->_seconds;
 }
 
-int Time::get_minutes() const {
+int Time::get_minutes() const noexcept {
 	return this->_minutes;
 }
 
-int Time::get_hours() const {
+int Time::get_hours() const noexcept {
 	return this->_hours;
 }
 
