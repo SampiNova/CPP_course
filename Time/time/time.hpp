@@ -3,21 +3,26 @@
 
 class Time;
 
+//////////////////////////////////////////
+//                                      //
+//        WATCH CLASS REALISATION       //
+//                                      //
+//////////////////////////////////////////
+
 class Watch {
 private:
 	bool _24h_format;
-	Time* _time;
+	Time& _time;
 public:
-	Watch() noexcept;
-	~Watch();
-	Watch(const Time& t) noexcept;
+	inline Watch(Time& t) noexcept: _time{t} {}
 
 	void set_format(bool is24h);
 	int format() const noexcept;
+	Time& get_time_object() const noexcept;
 
-	void set_seconds(const Time& t, int sec);
-	void set_minutes(const Time& t, int min);
-	void set_hours(const Time& t, int hr);
+	void set_seconds(Time& t, int sec);
+	void set_minutes(Time& t, int min);
+	void set_hours(Time& t, int hr);
 
 	int get_seconds(const Time& t) const noexcept;
 	int get_minutes(const Time& t) const noexcept;
@@ -25,8 +30,12 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const Watch& w);
-std::istream& operator>>(std::istream& in, Watch& w);
 
+//////////////////////////////////////////
+//                                      //
+//        TIME CLASS REALISATION        //
+//                                      //
+//////////////////////////////////////////
 
 class Time {
 private:
@@ -58,6 +67,14 @@ public:
 	Time& operator-=(const Time& t);
 	Time& operator-=(int s);
 
+	friend void Watch::set_seconds(Time& t, int sec);
+	friend void Watch::set_minutes(Time& t, int min);
+	friend void Watch::set_hours(Time& t, int hr);
+
+	friend int Watch::get_seconds(const Time& t) const noexcept;
+	friend int Watch::get_minutes(const Time& t) const noexcept;
+	friend int Watch::get_hours(const Time& t) const noexcept;
+
 	friend class SimpleWatch;
 };
 
@@ -72,15 +89,18 @@ bool operator!=(const Time &t1, const Time &t2);
 std::ostream& operator<<(std::ostream& out, const Time& t);
 std::istream& operator>>(std::istream& in, Time& t);
 
+//////////////////////////////////////////////////
+//                                              //
+//        SIMPLE WATCH CLASS REALISATION        //
+//                                              //
+//////////////////////////////////////////////////
 
 class SimpleWatch {
 private:
 	bool _24h_format;
-	Time* _time;
+	Time& _time;
 public:
-	SimpleWatch() noexcept;
-	~SimpleWatch();
-	SimpleWatch(const Time& t) noexcept;
+	inline SimpleWatch(Time& t) noexcept: _time{t} {};
 
 	void set_format(bool is24h);
 	int format() const noexcept;
@@ -95,4 +115,3 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& out, const SimpleWatch& sw);
-std::istream& operator>>(std::istream& in, SimpleWatch& sw);

@@ -6,24 +6,19 @@ public:
   virtual ~GenericCreature() {}
 };
 
-class WalkingCreature : public GenericCreature {
-public:
-  void walk() { std::cout << "Walking...\n"; }
-};
-
 class OceanCreature : public GenericCreature {
 public:
   void swim() { std::cout << "Swimming...\n"; }
 };
 
-class Amphibious : public OceanCreature, public WalkingCreature {
+class Amphibious : public OceanCreature {
 public:
-
+  void walk() { std::cout << "Walking...\n"; }
 };
 
-class TerrestrialCreature : public WalkingCreature {
+class TerrestrialCreature : protected Amphibious {
 public:
-
+  using Amphibious::walk;
 };
 
 class Bird : public TerrestrialCreature {
@@ -31,7 +26,7 @@ public:
   void fly() { std::cout << "Flying...\n"; }
 };
 
-class Waterfowl : public Bird, public OceanCreature {
+class Waterfowl : public Bird, public Amphibious {
 public:
 };
 

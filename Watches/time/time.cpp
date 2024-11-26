@@ -4,30 +4,13 @@
 
 //////////////////////////////////////////
 //                                      //
-//        WATCH CLASS REALISATION       //
-//                                      //
-//////////////////////////////////////////
-
-void Watch::set_format(bool is24h) {
-	this->_24h_format = is24h;
-}
-
-int Watch::format() const noexcept {
-	return this->_24h_format;
-}
-
-Time& Watch::get_time_object() const noexcept {
-	return this->_time;
-}
-
-//////////////////////////////////////////
-//                                      //
 //        TIME CLASS REALISATION        //
 //                                      //
 //////////////////////////////////////////
 
 unsigned Time::count = 0;
 unsigned Time::actual_id = 0;
+bool Time::simple_output = false;
 
 Time::Time() noexcept{
 	this->_seconds = 0;
@@ -36,12 +19,16 @@ Time::Time() noexcept{
 	this->count++;
 	this->_id = this->actual_id;
 	this->actual_id++;
-	std::cout << "Zero constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	if (this->simple_output) {
+		std::cout << "Zero constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	}
 }
 
 Time::~Time() {
 	this->count--;
-	std::cout << "Destructor was called. Object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	if (this->simple_output) {
+		std::cout << "Destructor was called. Object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	}
 }
 
 Time::Time(const Time &t) noexcept{
@@ -51,7 +38,9 @@ Time::Time(const Time &t) noexcept{
 	this->count++;
 	this->_id = this->actual_id;
 	this->actual_id++;
-	std::cout << "Copying constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	if (this->simple_output) {
+		std::cout << "Copying constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	}
 }
 
 Time::Time(int sec, int min, int hr) {
@@ -65,7 +54,9 @@ Time::Time(int sec, int min, int hr) {
 	this->count++;
 	this->_id = this->actual_id;
 	this->actual_id++;
-	std::cout << "Full constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	if (this->simple_output) {
+		std::cout << "Full constructor was called. New object Id: " << this->_id << "\nCount of Time: " << this->count << "\n";
+	}
 }
 
 int Time::to_seconds() {
@@ -143,54 +134,6 @@ Time& Time::operator-=(int s) {
 	return *this;
 }
 
-////////////////////////////
-//    friend functions    //
-////////////////////////////
-
-void Watch::set_seconds(Time& t, int sec) {
-	if (sec < 0) throw "Wrong seconds!";
-	t._seconds = sec;
-	t.normalize();
-}
-
-void Watch::set_minutes(Time& t, int min) {
-	if (min < 0) throw "Wrong minutes!";
-	t._minutes = min;
-	t.normalize();
-}
-
-void Watch::set_hours(Time& t, int hr) {
-	if (hr < 0) throw "Wrong hours!";
-	t._hours = hr;
-	t.normalize();
-}
-
-int Watch::get_seconds(const Time& t) const noexcept {
-	return t._seconds;
-}
-
-int Watch::get_minutes(const Time& t) const noexcept {
-	return t._minutes;
-}
-
-int Watch::get_hours(const Time& t) const noexcept {
-	return t._hours;
-}
-
-std::ostream& operator<<(std::ostream& out, const Watch& w) {
-	if (w.format()) {
-    	out << w.get_hours(w.get_time_object()) << ":" << w.get_minutes(w.get_time_object()) << ":" << w.get_seconds(w.get_time_object());
-	}
-	else {
-		out << w.get_hours(w.get_time_object()) % 12 << ":" << w.get_minutes(w.get_time_object()) << ":" << w.get_seconds(w.get_time_object());
-		if (w.get_hours(w.get_time_object()) > 12) out << " PM";
-		else out << " AM";
-	}
-   return out;
-}
-
-////////////////////////////
-
 Time operator+(const Time &t1, const Time &t2) {
 	Time new_time(t1.get_seconds() + t2.get_minutes(), 
 				  t1.get_minutes() + t2.get_minutes(), 
@@ -243,60 +186,4 @@ std::istream& operator>>(std::istream& in, Time& t) {
 
    t = Time(s, m, h);
    return in;
-}
-
-//////////////////////////////////////////////////
-//                                              //
-//        SIMPLE WATCH CLASS REALISATION        //
-//                                              //
-//////////////////////////////////////////////////
-
-void SimpleWatch::set_format(bool is24h) {
-	this->_24h_format = is24h;
-}
-
-int SimpleWatch::format() const noexcept {
-	return this->_24h_format;
-}
-
-void SimpleWatch::set_seconds(int sec) {
-	if (sec < 0) throw "Wrong seconds!";
-	this->_time._seconds = sec;
-	this->_time.normalize();
-}
-
-void SimpleWatch::set_minutes(int min) {
-	if (min < 0) throw "Wrong minutes!";
-	this->_time._minutes = min;
-	this->_time.normalize();
-}
-
-void SimpleWatch::set_hours(int hr) {
-	if (hr < 0) throw "Wrong hours!";
-	this->_time._hours = hr;
-	this->_time.normalize();
-}
-
-int SimpleWatch::get_seconds() const noexcept {
-	return this->_time._seconds;
-}
-
-int SimpleWatch::get_minutes() const noexcept {
-	return this->_time._minutes;
-}
-
-int SimpleWatch::get_hours() const noexcept {
-	return this->_time._hours;
-}
-
-std::ostream& operator<<(std::ostream& out, const SimpleWatch& sw) {
-	if (sw.format()) {
-    	out << sw.get_hours() << ":" << sw.get_minutes() << ":" << sw.get_seconds();
-	}
-	else {
-		out << sw.get_hours() % 12 << ":" << sw.get_minutes() << ":" << sw.get_seconds();
-		if (sw.get_hours() > 12) out << " PM";
-		else out << " AM";
-	}
-   return out;
 }

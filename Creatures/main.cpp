@@ -11,9 +11,8 @@ public:
   void swim() { std::cout << "Swimming...\n"; }
 };
 
-class Amphibious : protected OceanCreature {
+class Amphibious : public OceanCreature {
 public:
-  using OceanCreature::swim;
   void walk() { std::cout << "Walking...\n"; }
 };
 
@@ -29,7 +28,7 @@ public:
 
 class Waterfowl : public Bird {
 public:
-  using Bird::swim;
+  using OceanCreature::swim;
 };
 
 int main() {
