@@ -2,33 +2,33 @@
 
 class GenericCreature {
 public:
-  GenericCreature() {}
-  virtual ~GenericCreature() {}
+    GenericCreature() {}
+    virtual ~GenericCreature() {}
 };
 
 class OceanCreature : public GenericCreature {
 public:
-  void swim() { std::cout << "Swimming...\n"; }
+    void swim() { std::cout << "Swimming...\n"; }
 };
 
-class Amphibious : public OceanCreature {
+class TerrestrialCreature : public GenericCreature {
 public:
-  void walk() { std::cout << "Walking...\n"; }
+    void walk() { std::cout << "Walking...\n"; }
 };
 
-class TerrestrialCreature : protected Amphibious {
+class Amphibious : public OceanCreature, public TerrestrialCreature {
 public:
-  using Amphibious::walk;
 };
 
 class Bird : public TerrestrialCreature {
 public:
-  void fly() { std::cout << "Flying...\n"; }
+    void fly() { std::cout << "Flying...\n"; }
 };
 
-class Waterfowl : public Bird, public Amphibious {
+class Waterfowl : public Bird, public OceanCreature {
 public:
 };
+
 
 int main() {
   OceanCreature fish;
@@ -50,6 +50,6 @@ int main() {
   duck.fly();
   duck.swim();
 
-  return 0;
+    return 0;
 }
 

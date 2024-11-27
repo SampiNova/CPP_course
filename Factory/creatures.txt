@@ -1,0 +1,23 @@
+GenericCreature
+  |
+  +---OceanCreature
+  |    |
+  |    +---Shark
+  |    +---Dolphin
+  |    +---Amphibious
+  |        |
+  |        +---Crocodile
+  |        +---Alligator
+  |        
+  +---TerrestrialCreature
+      |
+      +---Lion
+      +---Elephant
+      +---Bird
+         |
+         +---Pigeon
+         +---Parrot
+         +---Waterfowl
+            |
+            +---Duck
+            +---Goose
