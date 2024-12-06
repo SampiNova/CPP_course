@@ -4,21 +4,21 @@
 
 using namespace std;
 
-TEST(CircularBufferTest, DefaultConstructor) {
+TEST(Constructors, DefaultConstructor) {
   CircularBuffer cb;
   EXPECT_EQ(cb.size(), 0);
   EXPECT_EQ(cb.capacity(), 0);
   EXPECT_TRUE(cb.empty());
 }
 
-TEST(CircularBufferTest, CapacityConstructor) {
+TEST(Constructors, CapacityConstructor) {
   CircularBuffer cb(5);
   EXPECT_EQ(cb.size(), 0);
   EXPECT_EQ(cb.capacity(), 5);
   EXPECT_TRUE(cb.empty());
 }
 
-TEST(CircularBufferTest, CapacityAndValueConstructor) {
+TEST(Constructors, CapacityAndValueConstructor) {
   CircularBuffer cb(5, 10);
   EXPECT_EQ(cb.size(), 5);
   EXPECT_EQ(cb.capacity(), 5);
@@ -28,7 +28,7 @@ TEST(CircularBufferTest, CapacityAndValueConstructor) {
   }
 }
 
-TEST(CircularBufferTest, CopyConstructor) {
+TEST(Constructors, CopyConstructor) {
   CircularBuffer cb1(5, 10);
   CircularBuffer cb2(cb1);
   EXPECT_EQ(cb2.size(), 5);
@@ -39,7 +39,7 @@ TEST(CircularBufferTest, CopyConstructor) {
   }
 }
 
-TEST(CircularBufferTest, IndexedGetters) {
+TEST(IndexGetter, IndexedGetters) {
   CircularBuffer cb(5);
   cb.push_back(1);
   cb.push_back(2);
@@ -60,7 +60,7 @@ TEST(CircularBufferTest, IndexedGetters) {
   //EXPECT_THROW(cb.at(4), std::invalid_argument);
 }
 
-TEST(CircularBufferTest, FrontBack) {
+TEST(Push, FrontBack) {
   CircularBuffer cb(5);
   cb.push_back(1);
   cb.push_back(2);
@@ -69,7 +69,7 @@ TEST(CircularBufferTest, FrontBack) {
   EXPECT_EQ(cb.back(), 3);
 }
 
-TEST(CircularBufferTest, Linearize) {
+TEST(Linerization, Linearize) {
   CircularBuffer cb(5);
   cb.push_back(1);
   cb.push_back(2);
@@ -84,7 +84,7 @@ TEST(CircularBufferTest, Linearize) {
   EXPECT_EQ(arr[4], 3);
 }
 
-TEST(CircularBufferTest, IsLinearized) {
+TEST(Linerization, IsLinearized) {
   CircularBuffer cb(5);
   EXPECT_TRUE(cb.is_linearized());
   cb.push_front(1);
@@ -95,7 +95,7 @@ TEST(CircularBufferTest, IsLinearized) {
   EXPECT_TRUE(cb.is_linearized());
 }
 
-TEST(CircularBufferTest, Rotate) {
+TEST(Linerization, Rotate) {
   CircularBuffer cb(5);
   cb.push_back(1);
   cb.push_back(2);
@@ -111,7 +111,7 @@ TEST(CircularBufferTest, Rotate) {
   EXPECT_EQ(cb[4], 3);
 }
 
-TEST(CircularBufferTest, SizeEmptyFull) {
+TEST(State, SizeEmptyFull) {
     CircularBuffer cb(5);
     EXPECT_EQ(cb.size(), 0);
     EXPECT_TRUE(cb.empty());
@@ -128,7 +128,7 @@ TEST(CircularBufferTest, SizeEmptyFull) {
     EXPECT_TRUE(cb.full());
 }
 
-TEST(CircularBufferTest, PushFront) {
+TEST(Push, PushFront) {
     CircularBuffer cb(5);
     cb.push_front(1);
     cb.push_front(2);
@@ -147,7 +147,7 @@ TEST(CircularBufferTest, PushFront) {
     EXPECT_EQ(cb[4], 1);
 }
 
-TEST(CircularBufferTest, PopBack) {
+TEST(Pop, PopBack) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -164,7 +164,7 @@ TEST(CircularBufferTest, PopBack) {
     //EXPECT_THROW(cb.pop_back(), std::exception);
 }
 
-TEST(CircularBufferTest, PopFront) {
+TEST(Pop, PopFront) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -181,7 +181,7 @@ TEST(CircularBufferTest, PopFront) {
     //EXPECT_THROW(cb.pop_front(), std::exception);
 }
 
-TEST(CircularBufferTest, Insert) {
+TEST(Push, Insert) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -196,7 +196,7 @@ TEST(CircularBufferTest, Insert) {
     //EXPECT_THROW(cb.insert(4, 4), std::invalid_argument);
 }
 
-TEST(CircularBufferTest, Erase) {
+TEST(Cleaning, Erase) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -211,7 +211,7 @@ TEST(CircularBufferTest, Erase) {
     //EXPECT_THROW(cb.erase(0, 5), std::invalid_argument);
 }
 
-TEST(CircularBufferTest, Clear) {
+TEST(Cleaning, Clear) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -221,7 +221,7 @@ TEST(CircularBufferTest, Clear) {
     EXPECT_TRUE(cb.empty());
 }
 
-TEST(CircularBufferTest, StreamOutput) {
+TEST(Output, StreamOutput) {
     CircularBuffer cb(5);
     cb.push_back(1);
     cb.push_back(2);
@@ -231,7 +231,7 @@ TEST(CircularBufferTest, StreamOutput) {
     EXPECT_EQ(ss.str(), "1 2 3 \n");
 }
 
-TEST(CircularBufferTest, Equal) {
+TEST(Comparators, Equal) {
     CircularBuffer cb1(5, 10);
     CircularBuffer cb2(5, 10);
     EXPECT_TRUE(cb1 == cb2);
@@ -239,7 +239,7 @@ TEST(CircularBufferTest, Equal) {
     EXPECT_FALSE(cb1 == cb2);
 }
 
-TEST(CircularBufferTest, NotEqual) {
+TEST(Comparators, NotEqual) {
     CircularBuffer cb1(5, 10);
     CircularBuffer cb2(5, 10);
     EXPECT_FALSE(cb1 != cb2);
