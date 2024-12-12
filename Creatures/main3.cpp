@@ -4,7 +4,7 @@
 class GenericCreature {
 public:
     virtual ~GenericCreature() {}
-    virtual void eat() = 0; // Pure virtual function
+    virtual void eat() = 0;
 };
 
 class OceanCreature : public virtual GenericCreature {
@@ -13,15 +13,16 @@ public:
     void eat() override { std::cout << "I eat plankton!\n"; }
 };
 
-class TerrestrialCreature : public virtual GenericCreature {
+class Amphibious : public virtual OceanCreature {
 public:
     void walk() { std::cout << "Walking...\n"; }
-    void eat() override { std::cout << "I eat plants!\n"; }
+    void eat() override { std::cout << "I eat insects and small fish!\n"; }
 };
 
-class Amphibious : public OceanCreature, public TerrestrialCreature {
+class TerrestrialCreature : protected Amphibious, public virtual GenericCreature {
 public:
-    void eat() override { std::cout << "I eat insects and small fish!\n"; }
+    using Amphibious::walk;
+    void eat() override { std::cout << "I eat plants!\n"; }
 };
 
 class Bird : public TerrestrialCreature {
@@ -30,7 +31,7 @@ public:
     void eat() override { std::cout << "I eat worms and seeds!\n"; }
 };
 
-class Waterfowl : public Bird, public OceanCreature {
+class Waterfowl : public Bird, public virtual OceanCreature {
 public:
     void eat() override { std::cout << "I eat fish and aquatic plants!\n"; }
 };
