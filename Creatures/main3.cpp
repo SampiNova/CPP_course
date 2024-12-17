@@ -4,7 +4,7 @@
 class GenericCreature {
 public:
     virtual ~GenericCreature() {}
-    virtual void eat() = 0;
+    virtual void eat() {std::cout << "Simple eating...\n";}
 };
 
 class OceanCreature : public virtual GenericCreature {
@@ -40,12 +40,18 @@ public:
 int main() {
     // Non-polymorphic behavior
     GenericCreature* creatures_array[] = {new OceanCreature, new TerrestrialCreature, new Amphibious, new Bird, new Waterfowl};
+    GenericCreature creatures_array2[] = {OceanCreature(), TerrestrialCreature(), Amphibious(), Bird(), Waterfowl()};
     for (int i = 0; i < 5; ++i) {
         creatures_array[i]->eat();
     }
     for (int i = 0; i < 5; ++i) {
+        creatures_array2[i].eat();
+    }
+
+    for (int i = 0; i < 5; ++i) {
         delete creatures_array[i];
     }
+
 
     std::vector<GenericCreature*> creatures;
     creatures.push_back(new OceanCreature);

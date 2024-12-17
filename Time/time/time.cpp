@@ -1,12 +1,12 @@
 #include "time.hpp"
 #include <iostream>
-#include <algorithm>
 
 //////////////////////////////////////////
 //                                      //
 //        WATCH CLASS REALISATION       //
 //                                      //
 //////////////////////////////////////////
+
 
 void Watch::set_format(bool is24h) {
 	this->_24h_format = is24h;
@@ -55,9 +55,9 @@ Time::Time(const Time &t) noexcept{
 }
 
 Time::Time(int sec, int min, int hr) {
-	if (sec < 0) throw "Wrong seconds argument!";
-	if (min < 0) throw "Wrong minutes argument!";
-	if (hr < 0) throw "Wrong hours argument!";
+	if (sec < 0) throw std::runtime_error("Wrong seconds argument!");
+	if (min < 0) throw std::runtime_error("Wrong minutes argument!");
+	if (hr < 0) throw std::runtime_error("Wrong hours argument!");
 	this->_seconds = sec;
 	this->_minutes = min;
 	this->_hours = hr;
@@ -86,19 +86,19 @@ void Time::normalize() {
 }
 
 void Time::set_seconds(int sec) {
-	if (sec < 0) throw "Wrong seconds!";
+	if (sec < 0) throw std::runtime_error("Wrong seconds!");
 	this->_seconds = sec;
 	this->normalize();
 }
 
 void Time::set_minutes(int min) {
-	if (min < 0) throw "Wrong minutes!";
+	if (min < 0) throw std::runtime_error("Wrong minutes!");
 	this->_minutes = min;
 	this->normalize();
 }
 
 void Time::set_hours(int hr) {
-	if (hr < 0) throw "Wrong hours!";
+	if (hr < 0) throw std::runtime_error("Wrong hours!");
 	this->_hours = hr;
 	this->normalize();
 }
@@ -148,19 +148,19 @@ Time& Time::operator-=(int s) {
 ////////////////////////////
 
 void Watch::set_seconds(Time& t, int sec) {
-	if (sec < 0) throw "Wrong seconds!";
+	if (sec < 0) throw std::runtime_error("Wrong seconds!");
 	t._seconds = sec;
 	t.normalize();
 }
 
 void Watch::set_minutes(Time& t, int min) {
-	if (min < 0) throw "Wrong minutes!";
+	if (min < 0) throw std::runtime_error("Wrong minutes!");
 	t._minutes = min;
 	t.normalize();
 }
 
 void Watch::set_hours(Time& t, int hr) {
-	if (hr < 0) throw "Wrong hours!";
+	if (hr < 0) throw std::runtime_error("Wrong hours!");
 	t._hours = hr;
 	t.normalize();
 }
@@ -260,19 +260,19 @@ int SimpleWatch::format() const noexcept {
 }
 
 void SimpleWatch::set_seconds(int sec) {
-	if (sec < 0) throw "Wrong seconds!";
+	if (sec < 0) throw std::runtime_error("Wrong seconds!");
 	this->_time._seconds = sec;
 	this->_time.normalize();
 }
 
 void SimpleWatch::set_minutes(int min) {
-	if (min < 0) throw "Wrong minutes!";
+	if (min < 0) throw std::runtime_error("Wrong minutes!");
 	this->_time._minutes = min;
 	this->_time.normalize();
 }
 
 void SimpleWatch::set_hours(int hr) {
-	if (hr < 0) throw "Wrong hours!";
+	if (hr < 0) throw std::runtime_error("Wrong hours!");
 	this->_time._hours = hr;
 	this->_time.normalize();
 }

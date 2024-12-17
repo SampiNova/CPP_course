@@ -1,156 +1,191 @@
 #include <iostream>
-#include <memory>
 #include <vector>
-#include <string>
+#include <memory>
 
 class GenericCreature {
 public:
-    virtual ~GenericCreature() = default;
-    virtual std::string getName() const = 0;
+    virtual ~GenericCreature() {}
     virtual void eat() = 0;
+    virtual std::string getName() const = 0;
 };
 
-
-class Shark : public GenericCreature {
+// Ocean Creatures
+class OceanCreature : public virtual GenericCreature {
 public:
-    std::string getName() const override { return "Акула"; }
-    void eat() override { std::cout << "рыбу" << std::endl; }
+    void swim() { std::cout << "Swimming...\n"; }
+    virtual void eat() override = 0;
+    virtual std::string getName() const = 0;
 };
 
-class Dolphin : public GenericCreature {
+class Shark : public OceanCreature {
 public:
-    std::string getName() const override { return "Дельфин"; }
-    void eat() override { std::cout << "мелкую рыбу" << std::endl; }
+    void eat() override { std::cout << "Shark eats fish!\n"; }
+    std::string getName() const override { return "Shark"; }
 };
 
-class Lion : public GenericCreature {
+class Dolphin : public OceanCreature {
 public:
-    std::string getName() const override { return "Лев"; }
-    void eat() override { std::cout << "мясо" << std::endl; }
+    void eat() override { std::cout << "Dolphin eats krill!\n"; }
+    std::string getName() const override { return "Dolphin"; }
 };
 
-class Elephant : public GenericCreature {
+// Terrestrial
+class TerrestrialCreature : public virtual GenericCreature {
 public:
-    std::string getName() const override { return "Слон"; }
-    void eat() override { std::cout << "траву" << std::endl; }
+    void walk() { std::cout << "Walking...\n"; }
+    virtual void eat() override = 0;
+    virtual std::string getName() const = 0;
 };
 
-class Crocodile : public GenericCreature {
+class Lion : public TerrestrialCreature {
 public:
-    std::string getName() const override { return "Крокодил"; }
-    void eat() override { std::cout << "рыбу и животных" << std::endl; }
+    void eat() override { std::cout << "Lion eats meat!\n"; }
+    std::string getName() const override { return "Lion"; }
 };
 
-class Alligator : public GenericCreature {
+class Elephant : public TerrestrialCreature {
 public:
-    std::string getName() const override { return "Аллигатор"; }
-    void eat() override { std::cout << "рыбу и животных" << std::endl; }
+    void eat() override { std::cout << "Elephant eats plants!\n"; }
+    std::string getName() const override { return "Elephant"; }
 };
 
-class Pigeon : public GenericCreature {
+// Amphibious
+class Amphibious : public OceanCreature, public TerrestrialCreature {
 public:
-    std::string getName() const override { return "Голубь"; }
-    void eat() override { std::cout << "семена" << std::endl; }
+    virtual void eat() override = 0;
+    virtual std::string getName() const = 0;
 };
 
-class Parrot : public GenericCreature {
+class Crocodile : public Amphibious {
 public:
-    std::string getName() const override { return "Попугай"; }
-    void eat() override { std::cout << "фрукты и орехи" << std::endl; }
+    void eat() override { std::cout << "Crocodile eats fish and reptiles!\n"; }
+    std::string getName() const override { return "Crocodile"; }
 };
 
-class Duck : public GenericCreature {
+class Alligator : public Amphibious {
 public:
-    std::string getName() const override { return "Утка"; }
-    void eat() override { std::cout << "насекомых и растения" << std::endl; }
+    void eat() override { std::cout << "Alligator eats fish and birds!\n"; }
+    std::string getName() const override { return "Alligator"; }
 };
 
-class Goose : public GenericCreature {
+// Bird
+class Bird : public TerrestrialCreature {
 public:
-    std::string getName() const override { return "Гусь"; }
-    void eat() override { std::cout << "траву и растения" << std::endl; }
+    virtual void fly() { std::cout << "Flying...\n"; }
+    virtual void eat() override = 0;
+    virtual std::string getName() const = 0;
 };
 
+class Pigeon : public Bird {
+public:
+    void eat() override { std::cout << "Pigeon eats seeds and scraps!\n"; }
+    std::string getName() const override { return "Pigeon"; }
+};
+
+class Parrot : public Bird {
+public:
+    void eat() override { std::cout << "Parrot eats fruits and nuts!\n"; }
+    std::string getName() const override { return "Parrot"; }
+};
+
+
+// Waterfowl
+class Waterfowl : public Bird, public OceanCreature {
+public:
+    void eat() override { std::cout << "Waterfowl eats fish and aquatic plants!\n"; }
+    std::string getName() const override { return "Waterfowl"; }
+};
+
+class Duck : public Waterfowl {
+public:
+    void eat() override { std::cout << "Duck eats aquatic plants and insects!\n"; }
+    std::string getName() const override { return "Duck"; }
+};
+
+class Goose : public Waterfowl {
+public:
+    void eat() override { std::cout << "Goose eats grass and grains!\n"; }
+    std::string getName() const override { return "Goose"; }
+};
 
 class ZooCreator {
 public:
-    virtual ~ZooCreator() = default;
-    virtual std::unique_ptr<GenericCreature> createCreature() = 0;
+    virtual std::vector<std::unique_ptr<GenericCreature>> createCreatures() = 0;
 };
 
-class SharkCreator : public ZooCreator {
+class OceanCreator : public ZooCreator {
 public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Shark>(); }
+    std::vector<std::unique_ptr<GenericCreature>> createCreatures() override {
+        std::vector<std::unique_ptr<GenericCreature>> res;
+        res.push_back(std::make_unique<Dolphin>());
+        res.push_back(std::make_unique<Shark>());
+
+        return res;
+    }
 };
 
-class DolphinCreator : public ZooCreator {
+class TerrestrialCreator : public ZooCreator {
 public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Dolphin>(); }
+    std::vector<std::unique_ptr<GenericCreature>> createCreatures() override {
+        std::vector<std::unique_ptr<GenericCreature>> res;
+        res.push_back(std::make_unique<Lion>());
+        res.push_back(std::make_unique<Elephant>());
+
+        return res;
+    }
 };
 
-class LionCreator : public ZooCreator {
+class AmphibiousCreator : public ZooCreator {
 public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Lion>(); }
+    std::vector<std::unique_ptr<GenericCreature>> createCreatures() override {
+        std::vector<std::unique_ptr<GenericCreature>> res;
+        res.push_back(std::make_unique<Alligator>());
+        res.push_back(std::make_unique<Crocodile>());
+
+        return res;
+    }
 };
 
-class ElephantCreator : public ZooCreator {
+class BirdCreator : public ZooCreator {
 public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Elephant>(); }
+    std::vector<std::unique_ptr<GenericCreature>> createCreatures() override {
+        std::vector<std::unique_ptr<GenericCreature>> res;
+        res.push_back(std::make_unique<Pigeon>());
+        res.push_back(std::make_unique<Parrot>());
+
+        return res;
+    }
 };
 
-class CrocodileCreator : public ZooCreator {
+class WaterfowlCreator : public ZooCreator {
 public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Crocodile>(); }
+    std::vector<std::unique_ptr<GenericCreature>> createCreatures() override {
+        std::vector<std::unique_ptr<GenericCreature>> res;
+        res.push_back(std::make_unique<Goose>());
+        res.push_back(std::make_unique<Duck>());
+
+        return res;
+    }
 };
 
-class AlligatorCreator : public ZooCreator {
-public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Alligator>(); }
-};
-
-class PigeonCreator : public ZooCreator {
-public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Pigeon>(); }
-};
-
-class ParrotCreator : public ZooCreator {
-public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Parrot>(); }
-};
-
-class DuckCreator : public ZooCreator {
-public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Duck>(); }
-};
-
-class GooseCreator : public ZooCreator {
-public:
-    std::unique_ptr<GenericCreature> createCreature() override { return std::make_unique<Goose>(); }
-};
 
 
 int main() {
     std::vector<std::unique_ptr<ZooCreator>> creators;
-    creators.push_back(std::make_unique<SharkCreator>());
-    creators.push_back(std::make_unique<DolphinCreator>());
-    creators.push_back(std::make_unique<LionCreator>());
-    creators.push_back(std::make_unique<ElephantCreator>());
-    creators.push_back(std::make_unique<CrocodileCreator>());
-    creators.push_back(std::make_unique<AlligatorCreator>());
-    creators.push_back(std::make_unique<PigeonCreator>());
-    creators.push_back(std::make_unique<ParrotCreator>());
-    creators.push_back(std::make_unique<DuckCreator>());
-    creators.push_back(std::make_unique<GooseCreator>());
+    creators.push_back(std::make_unique<OceanCreator>());
+    creators.push_back(std::make_unique<TerrestrialCreator>());
+    creators.push_back(std::make_unique<AmphibiousCreator>());
+    creators.push_back(std::make_unique<BirdCreator>());
+    creators.push_back(std::make_unique<WaterfowlCreator>());
 
     for (auto& creator : creators) {
-        for (int i = 0; i < 3; ++i) {
-            auto creature = creator->createCreature();
-            std::cout << creature->getName() << " ест: ";
-            creature->eat();
+        auto creatures = creator->createCreatures();
+        for (auto& animal : creatures) {
+            std::cout << animal->getName() << " is eating: ";
+            animal->eat();
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 
     return 0;
 }
-

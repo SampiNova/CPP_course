@@ -1,14 +1,14 @@
 #include "watches.hpp"
 #include "../time/time.hpp"
 #include <iostream>
-#include <algorithm>
 
 //////////////////////////////////////////////////
 //        SIMPLE WATCH CLASS REALISATION        //
 //////////////////////////////////////////////////
 
-SimpleWatch::SimpleWatch() noexcept: Time() {
+SimpleWatch::SimpleWatch() noexcept {
 	this->is_24_format = true;
+    this->_time = Time();
 	std::cout << "\tZero constructor of SimpleWatch was called.\n";
 }
 
@@ -16,23 +16,28 @@ SimpleWatch::~SimpleWatch() {
 	std::cout << "\tDestructor of SimpleWatch was called.\n";
 }
 
-SimpleWatch::SimpleWatch(bool format24) noexcept: Time() {
+SimpleWatch::SimpleWatch(bool format24) noexcept {
 	this->is_24_format = format24;
+this->_time = Time();
+
 	std::cout << "\tSimple constructor of SimpleWatch was called.\n";
 }
 
-SimpleWatch::SimpleWatch(const SimpleWatch& sw) noexcept: Time(sw.get_seconds(), sw.get_minutes(), sw.get_hours()) {
+SimpleWatch::SimpleWatch(const SimpleWatch& sw) noexcept {
 	this->is_24_format = sw.get_format();
+    this->_time = Time(sw.get_seconds(), sw.get_minutes(), sw.get_hours());
 	std::cout << "\tCopy constructor of SimpleWatch was called.\n";
 }
 
-SimpleWatch::SimpleWatch(const Time& t, bool format24=true) noexcept: Time(t) {
+SimpleWatch::SimpleWatch(const Time& t, bool format24=true) noexcept {
 	this->is_24_format = format24;
+    this->_time = Time(t);
 	std::cout << "\tOn Time constructor of SimpleWatch was called.\n";
 }
 
-SimpleWatch::SimpleWatch(int sec, int min, int hr, bool format24=true): Time(sec, min, hr) {
+SimpleWatch::SimpleWatch(int sec, int min, int hr, bool format24=true) {
 	this->is_24_format = format24;
+    this->_time = Time(sec, min, hr);
 	std::cout << "\tFull constructor of SimpleWatch was called.\n";
 }
 

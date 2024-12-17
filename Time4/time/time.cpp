@@ -1,6 +1,5 @@
 #include "time.hpp"
 #include <iostream>
-#include <algorithm>
 
 unsigned Time::count = 0;
 
@@ -9,12 +8,12 @@ Time::Time() {
 	this->_minutes = 0;
 	this->_hours = 0;
 	this->count++;
-	std::cout << "Zero constructor was called.\nCount of Time: " << this->count << "\n";
+	std::cout << "::: Zero constructor was called.\n::: Count of Time: " << this->count << "\n";
 }
 
 Time::~Time() {
 	this->count--;
-	std::cout << "Destructor was called.\nCount of Time: " << this->count << "\n";
+	std::cout << "::: Destructor was called.\n::: Count of Time: " << this->count << "\n";
 }
 
 Time::Time(const Time &t) {
@@ -22,7 +21,7 @@ Time::Time(const Time &t) {
 	this->_minutes = t.get_minutes();
 	this->_hours = t.get_hours();
 	this->count++;
-	std::cout << "Copying constructor was called.\nCount of Time: " << this->count << "\n";
+	std::cout << "::: Copying constructor was called.\n::: Count of Time: " << this->count << "\n";
 }
 
 Time::Time(int sec, int min, int hr) {
@@ -31,7 +30,7 @@ Time::Time(int sec, int min, int hr) {
 	this->_hours = hr;
 	this->normalize();
 	this->count++;
-	std::cout << "Full constructor was called.\nCount of Time: " << this->count << "\n";
+	std::cout << "::: Full constructor was called.\n::: Count of Time: " << this->count << "\n";
 }
 
 int Time::to_seconds() {

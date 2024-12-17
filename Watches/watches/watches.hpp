@@ -9,6 +9,7 @@
 class SimpleWatch: public Time {
 private:
 	bool is_24_format;	
+    Time _time;
 public:
 	SimpleWatch() noexcept;
 	~SimpleWatch();

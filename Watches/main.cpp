@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include "time/time.hpp"
 #include "watches/watches.hpp"
 
