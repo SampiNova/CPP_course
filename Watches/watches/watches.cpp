@@ -18,7 +18,7 @@ SimpleWatch::~SimpleWatch() {
 
 SimpleWatch::SimpleWatch(bool format24) noexcept {
 	this->is_24_format = format24;
-this->_time = Time();
+    this->_time = Time();
 
 	std::cout << "\tSimple constructor of SimpleWatch was called.\n";
 }

@@ -1,5 +1,6 @@
 #include "time/time.hpp"
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 #include <list>
 #include <memory>
@@ -13,31 +14,34 @@ int main() {
     dynamicTimeArray[2] = new Time(12,34,56);
 
 
+    std::cout << ">> vector\n";
     std::vector<Time> timeVector;
     timeVector.emplace_back(1,2,3);
     timeVector.emplace_back(4,5,6);
 
+    std::cout << ">> list\n";
     std::list<Time> timeList;
     timeList.emplace_back(7,8,9);
     timeList.emplace_back(10,11,12);
 
 
+    std::cout << ">> pointers\n";
     auto sharedTime = std::make_shared<Time>(13, 14, 15);
     std::unique_ptr<Time> uniqueTime = std::make_unique<Time>(16,17,18);
 
 
     try {
         Time timeWithException(-1, 1, 1);
-    } catch (const char* error) {
-        std::cerr << "Exception caught: " << error << std::endl;
+    } catch (std::runtime_error error) {
+        std::cerr << "Exception caught: " << error.what() << std::endl;
     }
 
 
     try {
         Time time1(10,20,30);
         time1.set_seconds(-1);
-    } catch (const char* error) {
-        std::cerr << "Exception caught: " << error << std::endl;
+    } catch (std::runtime_error error) {
+        std::cerr << "Exception caught: " << error.what() << std::endl;
     }
 
     Time time2(1,2,3);

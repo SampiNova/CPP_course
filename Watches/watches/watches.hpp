@@ -6,7 +6,7 @@
 //        SIMPLE WATCH CLASS REALISATION        //
 //////////////////////////////////////////////////
 
-class SimpleWatch: public Time {
+class SimpleWatch {
 private:
 	bool is_24_format;	
     Time _time;
