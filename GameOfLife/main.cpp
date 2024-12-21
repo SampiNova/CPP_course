@@ -7,11 +7,15 @@ using namespace std;
 
 int main() {
 
-    Field myF(20, 10);
+    Universe uni(10, 10, 0);
 
-    myF.set_at(-1, -1, 1);
+    cout << uni << "\n";
 
-    cout << myF << end;
+    uni.set_cell(2, 0);
+    uni.set_cell(2, 1);
+    uni.set_cell(2, 2);
+
+    cout << uni << "\n";
 
     return 0;
 }
