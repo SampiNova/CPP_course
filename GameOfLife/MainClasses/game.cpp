@@ -1,5 +1,7 @@
 #include "game.hpp"
 #include <stdexcept>
+#include <thread>
+#include <chrono>
 
 ///////////////////////////////////
 //                               //
@@ -14,8 +16,7 @@ Field::Field() {
 }
 Field::~Field() {}
 Field::Field(const Field& f) {
-    this->field = field_type(f.get_width() * f.get_height(), 0);
-    std::copy(f.get_field().begin(), f.get_field().end(), this->field.begin());
+    this->field = f.get_field();
     this->width = f.get_width();
     this->height = f.get_height();
 }
@@ -36,6 +37,18 @@ int Field::get_height() const {
 }
 field_type Field::get_field() const {
     return this->field;
+}
+int Field::get_neighbours(int row, int col) const {
+    int res = 0;
+    if (at(row - 1, col - 1)) res++;
+    if (at(row - 1, col)) res++;
+    if (at(row - 1, col + 1)) res++;
+    if (at(row, col - 1)) res++;
+    if (at(row, col + 1)) res++;
+    if (at(row + 1, col - 1)) res++;
+    if (at(row + 1, col)) res++;
+    if (at(row + 1, col + 1)) res++;
+    return res;
 }
 
 bool Field::at(int row, int col) const {
@@ -130,7 +143,7 @@ int_set Universe::get_birth() const {
 int_set Universe::get_survival() const {
     return this->survival;
 }
-Field Universe::get_field() const {
+Field& Universe::get_field() const {
     return *this->field;
 }
 
@@ -156,19 +169,6 @@ void Universe::set_cell(int row, int col, bool value) {
     this->field->set_at(row, col, value);
 }
 
-int Universe::get_neighbours(int row, int col) const {
-    int res = 0;
-    if (this->field->at(row - 1, col - 1)) res++;
-    if (this->field->at(row - 1, col)) res++;
-    if (this->field->at(row - 1, col + 1)) res++;
-    if (this->field->at(row, col - 1)) res++;
-    if (this->field->at(row, col + 1)) res++;
-    if (this->field->at(row + 1, col - 1)) res++;
-    if (this->field->at(row + 1, col)) res++;
-    if (this->field->at(row + 1, col + 1)) res++;
-    return res;
-}
-
 void Universe::tick() {
     if (!this->field) {
         throw std::runtime_error("Field is empty");
@@ -176,17 +176,42 @@ void Universe::tick() {
     Field tmp(this->field->get_width(), this->field->get_height());
     for (int i = 0; i < this->field->get_height(); i++) {
         for (int j = 0; j < this->field->get_width(); j++) {
+            int cnt = this->field->get_neighbours(i, j);
             if (this->field->at(i, j)) {
-                if (this->survival.count(get_neighbours(i, j)) > 0) tmp.set_at(i, j, 1); 
+                if (this->survival.count(cnt) > 0) tmp.set_at(i, j, 1); 
                 else tmp.set_at(i, j, 0);
             }
             else {
-                if (this->birth.count(get_neighbours(i, j) > 0)) tmp.set_at(i, j, 1); 
+                if (this->birth.count(cnt) > 0) tmp.set_at(i, j, 1); 
             }
         }
     }
     delete this->field;
     this->field = new Field(tmp);
+}
+void Universe::n_ticks(int n, int delay) {
+    if (n < 1) {
+        throw std::invalid_argument("Count of ticks is too small");
+    }
+    if (delay < 0) {
+        throw std::invalid_argument("Delay couldn't be less then 0");
+    }
+    std::cout << "\033[2J\033[H";
+    std::cout << *this;
+    for (int i = 0; i < n; i++) {
+        if (delay != 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        }
+        this->tick();
+        if (delay != 0) {
+            std::cout << "\033[" << this->field->get_height() << "A\r";
+            std::cout << *this;
+        }
+    }
+    if (delay == 0) {
+        std::cout << "\033[" << this->field->get_height() << "A\r";
+        std::cout << *this;
+    }
 }
 
 

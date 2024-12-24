@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#define CELL "\033[92m\u25A0\033[0m"
-#define N_CELL "\033[90m\u25FB\033[0m"
+#define CELL "\033[1;92m\u25A0\033[0m "
+#define N_CELL "\033[90m\u25FB\033[0m "
 
 using field_type = std::vector<bool>;
 using str = std::string;
@@ -26,6 +26,7 @@ public:
     int get_height() const;
     field_type get_field() const;
     bool at(int row, int col) const;
+    int get_neighbours(int row, int col) const;
 
     void set_at(int row, int col, bool value=true);
     void set_field(const field_type& f);
@@ -51,7 +52,7 @@ public:
     str get_name() const;
     int_set get_birth() const;
     int_set get_survival() const;
-    Field get_field() const;
+    Field& get_field() const;
 
     void set_name(str name);
     void set_birth(int_set birth);
@@ -59,9 +60,8 @@ public:
     void set_field(const Field& f);
     void set_cell(int row, int col, bool value=true);
 
-    int get_neighbours(int row, int col) const;
-
     void tick();
+    void n_ticks(int n, int delay=0);
 };
 
 std::ostream& operator<<(std::ostream& out, const Universe& u);
