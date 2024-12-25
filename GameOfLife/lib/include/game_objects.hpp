@@ -66,3 +66,6 @@ public:
 
 std::ostream& operator<<(std::ostream& out, const Universe& u);
 
+Universe* read_universe(str name);
+Universe* write_universe(str name);
+

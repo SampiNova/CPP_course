@@ -1,7 +1,20 @@
-#include "game.hpp"
+#include "../include/game_objects.hpp"
+#include <fstream>
+#include <regex>
 #include <stdexcept>
+#include <string>
 #include <thread>
 #include <chrono>
+
+class invalid_argument: public std::invalid_argument {
+private:
+    int err_code;
+public:
+    invalid_argument(const str& msg, int code) : std::invalid_argument(msg), err_code(code) {}
+    int get_error_code() const {
+        return this->err_code;
+    }
+};
 
 ///////////////////////////////////
 //                               //
@@ -220,4 +233,59 @@ std::ostream& operator<<(std::ostream& out, const Universe& u) {
     return out;
 }
 
+void pop_n(str* string) {
+    if (!string->empty() && (string->back() == '\n' || string->back() == '\r')) {
+        string->pop_back();
+    }
+}
+
+Universe* read_universe(const str name) {
+    std::ifstream input(name);
+    if (!input.is_open()) {
+        throw invalid_argument("Error while opening file. Invalid file name or file missing.", 1);
+    }
+    str line;
+    if (!std::getline(input, line)) {
+        throw invalid_argument("Your file is empty.", 2);
+    }
+    pop_n(&line);
+
+    const str life = "#Life 1.06";
+    if (line != life) {
+        throw invalid_argument("Wrong file format. Call help command to learn more about the format.", 3);
+    }
+
+    Universe* uni = new Universe();
+
+    std::regex cell_pattern(R"(^([-+]?\d+)\s+([-+]?\d+$))");
+    std::regex name_pattern(R"(^#N\s+(.+)$)");
+    std::regex rule_pattern(R"(^#R\s+B(\d+)/S(\d+))$)");
+    std::regex size_pattern(R"(^#S\s+(\d+)\s+(\d+)$)");
+    std::smatch matches;
+    while (std::getline(input, line)) {
+        if (line.empty()) continue;
+        pop_n(&line);
+        if (std::regex_match(line, matches, name_pattern)) {
+            uni->set_name(matches[0]);            
+        }
+        else if (std::regex_match(line, matches, rule_pattern)) {
+            std::cout << matches[0] << "\n";
+            std::cout << matches[1] << "\n";
+        }
+        else if (std::regex_match(line, matches, size_pattern)) {
+            std::cout << matches[0] << "\n";
+            std::cout << matches[1] << "\n";
+        }
+        else if (std::regex_match(line, matches, cell_pattern)) {
+            std::cout << matches[0] << "\n";
+            std::cout << matches[1] << "\n";
+        }
+    }
+
+    input.close();
+    return uni;
+}
+Universe* write_universe(str name) {
+
+}
 

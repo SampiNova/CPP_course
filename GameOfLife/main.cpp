@@ -1,12 +1,15 @@
 #include <iostream>
-#include "MainClasses/game.hpp"
+#include "./lib/include/game_objects.hpp"
 
 #define end '\n'
 
 using namespace std;
 
 int main() {
+    const str name = "test.txt";
+    Universe* my_uni = read_universe(name);
 
+    /*
     Universe uni(10, 10, 0);
 
     uni.set_cell(0, 1);
@@ -16,6 +19,7 @@ int main() {
     uni.set_cell(2, 2);
 
     uni.n_ticks(1000, 100);
+    */
 
     return 0;
 }

@@ -5,7 +5,7 @@ project(GameOfLife LANGUAGES CXX)
 option(MAKE_TEST "Making unit tests" ON)
 message("MAKE_TEST: ${MAKE_TEST}")
 
-add_subdirectory(MainClasses)
+add_subdirectory(lib)
 if (${MAKE_TEST})
 	add_subdirectory(test)
 else()
