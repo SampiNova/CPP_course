@@ -13,4 +13,5 @@ endif()
 add_executable(game_of_life main.cpp)
 
 target_link_libraries(game_of_life PRIVATE GameClasses)
+target_link_libraries(game_of_life PRIVATE Interface)
 

@@ -1,20 +1,8 @@
 #include "../include/game_objects.hpp"
-#include <fstream>
-#include <regex>
 #include <stdexcept>
-#include <string>
 #include <thread>
 #include <chrono>
 
-class invalid_argument: public std::invalid_argument {
-private:
-    int err_code;
-public:
-    invalid_argument(const str& msg, int code) : std::invalid_argument(msg), err_code(code) {}
-    int get_error_code() const {
-        return this->err_code;
-    }
-};
 
 ///////////////////////////////////
 //                               //
@@ -63,6 +51,19 @@ int Field::get_neighbours(int row, int col) const {
     if (at(row + 1, col + 1)) res++;
     return res;
 }
+std::vector<std::pair<int, int>> Field::get_points() const {
+    std::vector<std::pair<int, int>> res;
+    for (int i = 0; i < this->field.size(); i++) {
+        if (this->field[i]) {
+            int row = i / this->width;
+            int col = i % this->width;
+
+            std::pair<int, int> tmp(row, col);
+            res.push_back(tmp);
+        }
+    }
+    return res;
+}
 
 bool Field::at(int row, int col) const {
     int i = (row % this->height + this->height) % this->height;
@@ -84,6 +85,11 @@ void Field::set_field(const field_type& f) {
     std::copy(f.begin(), f.end(), this->field.begin());
 }
 
+bool operator==(const Field& f1, const Field& f2) {
+    if (f1.get_height() != f2.get_height() || f1.get_width() != f2.get_width()) return false;
+    return f1.get_field() == f2.get_field();
+}
+
 std::ostream& operator<<(std::ostream& out, const Field& f) {
     for (int i = 0; i < f.get_height(); i++) {
         for (int j = 0; j < f.get_width(); j++) {
@@ -101,7 +107,7 @@ std::ostream& operator<<(std::ostream& out, const Field& f) {
 //                                  //
 //////////////////////////////////////
 
-Universe::Universe() {
+Universe::Universe(): ticks_cnt(0) {
     this->name = "Unknown";
     this->field = nullptr;
     this->birth.insert(3);
@@ -112,7 +118,7 @@ Universe::~Universe() {
     delete this->field;
     this->field = nullptr;
 }
-Universe::Universe(const Universe& u) {
+Universe::Universe(const Universe& u): ticks_cnt(0) {
     if (this->field) {
         delete this->field;
     }
@@ -121,7 +127,7 @@ Universe::Universe(const Universe& u) {
     this->survival = u.get_survival();
     this->field = new Field(u.get_field());
 }
-Universe::Universe(int width, int height, bool value) {
+Universe::Universe(int width, int height, bool value): ticks_cnt(0) {
     if (width < 3 || height < 3) {
         throw std::invalid_argument("Wrong field size");
     }
@@ -131,7 +137,7 @@ Universe::Universe(int width, int height, bool value) {
     this->survival.insert(3);
     this->field = new Field(width, height, value);
 }
-Universe::Universe(str name, int_set birth, int_set survival, int width, int height, bool value) {
+Universe::Universe(str name, int_set birth, int_set survival, int width, int height, bool value): ticks_cnt(0) {
     if (width < 3 || height < 3) {
         throw std::invalid_argument("Wrong field size");
     }
@@ -140,7 +146,7 @@ Universe::Universe(str name, int_set birth, int_set survival, int width, int hei
     this->survival = survival;
     this->field = new Field(width, height, value);
 }
-Universe::Universe(str name, int_set birth, int_set survival, const Field& f) {
+Universe::Universe(str name, int_set birth, int_set survival, const Field& f): ticks_cnt(0) {
     this->name = name;
     this->birth = birth;
     this->survival = survival;
@@ -157,7 +163,13 @@ int_set Universe::get_survival() const {
     return this->survival;
 }
 Field& Universe::get_field() const {
+    if (!this->field) {
+        throw std::runtime_error("Self field is empty.");
+    }
     return *this->field;
+}
+int Universe::get_ticks() const {
+    return this->ticks_cnt;
 }
 
 void Universe::set_name(str name) {
@@ -181,8 +193,24 @@ void Universe::set_cell(int row, int col, bool value) {
     }
     this->field->set_at(row, col, value);
 }
+void Universe::set_cell_err(int row, int col, bool value) {
+    if (!this->field) {
+        throw std::runtime_error("Field is empty");
+    }
+    if (this->field->at(row, col) == value) {
+        throw std::invalid_argument("This cell is already setted.");
+    }
+    this->field->set_at(row, col, value);
+}
 
-void Universe::tick() {
+void Universe::set_ticks(int ticks) {
+    if (ticks < 0) {
+        throw std::invalid_argument("Ticks must be greater or equal of zero.");
+    }
+    this->ticks_cnt = ticks;
+}
+
+bool Universe::tick() {
     if (!this->field) {
         throw std::runtime_error("Field is empty");
     }
@@ -191,101 +219,23 @@ void Universe::tick() {
         for (int j = 0; j < this->field->get_width(); j++) {
             int cnt = this->field->get_neighbours(i, j);
             if (this->field->at(i, j)) {
-                if (this->survival.count(cnt) > 0) tmp.set_at(i, j, 1); 
+                if (this->survival.count(cnt) > 0) {
+                    tmp.set_at(i, j, 1);
+                }
                 else tmp.set_at(i, j, 0);
             }
             else {
-                if (this->birth.count(cnt) > 0) tmp.set_at(i, j, 1); 
+                if (this->birth.count(cnt) > 0) {
+                    tmp.set_at(i, j, 1);
+                }
             }
         }
     }
+    this->ticks_cnt++;
+    bool res;
+    res = (*this->field) == tmp;
     delete this->field;
     this->field = new Field(tmp);
-}
-void Universe::n_ticks(int n, int delay) {
-    if (n < 1) {
-        throw std::invalid_argument("Count of ticks is too small");
-    }
-    if (delay < 0) {
-        throw std::invalid_argument("Delay couldn't be less then 0");
-    }
-    std::cout << "\033[2J\033[H";
-    std::cout << *this;
-    for (int i = 0; i < n; i++) {
-        if (delay != 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
-        this->tick();
-        if (delay != 0) {
-            std::cout << "\033[" << this->field->get_height() << "A\r";
-            std::cout << *this;
-        }
-    }
-    if (delay == 0) {
-        std::cout << "\033[" << this->field->get_height() << "A\r";
-        std::cout << *this;
-    }
-}
-
-
-std::ostream& operator<<(std::ostream& out, const Universe& u) {
-    out << u.get_field();
-    return out;
-}
-
-void pop_n(str* string) {
-    if (!string->empty() && (string->back() == '\n' || string->back() == '\r')) {
-        string->pop_back();
-    }
-}
-
-Universe* read_universe(const str name) {
-    std::ifstream input(name);
-    if (!input.is_open()) {
-        throw invalid_argument("Error while opening file. Invalid file name or file missing.", 1);
-    }
-    str line;
-    if (!std::getline(input, line)) {
-        throw invalid_argument("Your file is empty.", 2);
-    }
-    pop_n(&line);
-
-    const str life = "#Life 1.06";
-    if (line != life) {
-        throw invalid_argument("Wrong file format. Call help command to learn more about the format.", 3);
-    }
-
-    Universe* uni = new Universe();
-
-    std::regex cell_pattern(R"(^([-+]?\d+)\s+([-+]?\d+$))");
-    std::regex name_pattern(R"(^#N\s+(.+)$)");
-    std::regex rule_pattern(R"(^#R\s+B(\d+)/S(\d+))$)");
-    std::regex size_pattern(R"(^#S\s+(\d+)\s+(\d+)$)");
-    std::smatch matches;
-    while (std::getline(input, line)) {
-        if (line.empty()) continue;
-        pop_n(&line);
-        if (std::regex_match(line, matches, name_pattern)) {
-            uni->set_name(matches[0]);            
-        }
-        else if (std::regex_match(line, matches, rule_pattern)) {
-            std::cout << matches[0] << "\n";
-            std::cout << matches[1] << "\n";
-        }
-        else if (std::regex_match(line, matches, size_pattern)) {
-            std::cout << matches[0] << "\n";
-            std::cout << matches[1] << "\n";
-        }
-        else if (std::regex_match(line, matches, cell_pattern)) {
-            std::cout << matches[0] << "\n";
-            std::cout << matches[1] << "\n";
-        }
-    }
-
-    input.close();
-    return uni;
-}
-Universe* write_universe(str name) {
-
+    return res;
 }
 

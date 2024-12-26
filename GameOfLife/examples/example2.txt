@@ -1,0 +1,70 @@
+#Life 1.06
+#N HighLife_Block
+#R B36/S23
+#S 25 25
+10 10
+10 11
+11 10
+11 11
+
+#Life 1.06
+#N 34Life_Line
+#R B34/S34
+#S 25 25
+8 10
+9 10
+10 10
+11 10
+12 10
+
+#Life 1.06
+#N Coral_Branch
+#R B3/S12345
+#S 40 40
+15 15
+16 15
+16 16
+17 16
+18 16
+
+#Life 1.06
+#N Maze_Cross
+#R B3/S1234
+#S 40 40
+19 19
+20 19
+21 19
+20 18
+20 20
+
+#Life 1.06
+#N QuadLife_Square
+#R B2/S134
+#S 40 40
+15 15
+15 16
+16 15
+16 16
+
+#Life 1.06
+#N Amoeba_Cluster
+#R B357/S1358
+#S 50 50
+20 20
+21 20
+22 20
+20 21
+22 21
+21 22
+
+#Life 1.06
+#N Fire_Spark
+#R B1/S23
+#S 25 25
+12 12
+
+#Life 1.06
+#N Growth_Seed
+#R B4567/S2
+#S 30 30
+15 15

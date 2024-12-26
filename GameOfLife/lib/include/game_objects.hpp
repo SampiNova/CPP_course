@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#define CELL "\033[1;92m\u25A0\033[0m "
-#define N_CELL "\033[90m\u25FB\033[0m "
+#define CELL "\033[1;92m\u25A0\033[0;0m "
+#define N_CELL "\033[0;90m\u25FB\033[0;0m "
 
 using field_type = std::vector<bool>;
 using str = std::string;
@@ -27,10 +27,13 @@ public:
     field_type get_field() const;
     bool at(int row, int col) const;
     int get_neighbours(int row, int col) const;
+    std::vector<std::pair<int, int>> get_points() const;
 
     void set_at(int row, int col, bool value=true);
     void set_field(const field_type& f);
 };
+
+bool operator==(const Field& f1, const Field& f2);
 
 std::ostream& operator<<(std::ostream& out, const Field& f);
 
@@ -41,6 +44,7 @@ private:
     int_set birth;
     int_set survival;
     Field* field;
+    int ticks_cnt;
 public:
     Universe();
     ~Universe();
@@ -53,19 +57,16 @@ public:
     int_set get_birth() const;
     int_set get_survival() const;
     Field& get_field() const;
+    int get_ticks() const;
 
     void set_name(str name);
     void set_birth(int_set birth);
     void set_survival(int_set survival);
     void set_field(const Field& f);
     void set_cell(int row, int col, bool value=true);
+    void set_cell_err(int row, int col, bool value=true);
+    void set_ticks(int ticks=0);
 
-    void tick();
-    void n_ticks(int n, int delay=0);
+    bool tick();
 };
-
-std::ostream& operator<<(std::ostream& out, const Universe& u);
-
-Universe* read_universe(str name);
-Universe* write_universe(str name);
 

@@ -3,21 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <regex>
 
-class Interface {
-private:
-    Universe* uni;
-public:
-    Interface();
-    ~Interface();
-    Interface(const Interface& I);
-    Interface(const Universe& u);
-
-    void set_universe(const Universe& u);
-
-    Universe& get_universe() const;
-    
-    void run_cmd(str cmd) const;
-};
-
-
+Universe* read_universe(str name);
+void write_universe(const Universe& u, str name);
