@@ -1,6 +1,9 @@
+#include <cstdio>
+#include <fstream>
 #include <iostream>
 #include <regex>
 #include <stdexcept>
+#include <string>
 #include <thread>
 #include "./lib/include/game_interface.hpp"
 
@@ -30,9 +33,22 @@ int main(int argc, char* argv[]) {
     }
     else if (argc == 2) {
         str arg = argv[1];
+        if (arg == "-h" || arg == "--help") {
+            std::ifstream help_args("./lib/args_help.txt");
+            if (!help_args.is_open()) {
+                cerr << "\033[1;91m" << "CRITICAL ERROR: help file is damaged or not flound! You need to reload it from github repository!\n\033[0;0m";
+                return 1;
+            }
+            else {
+                str line;
+                while (std::getline(help_args, line)) {
+                    cout << line << "\n";
+                }
+                return 0;
+            }
+        }
         if (std::regex_match(arg, matches, files_pattern)) {
             if (matches[1] == "-s" || matches[1] == "--source") input_name = matches[2];
-            else if (matches[1] == "-h" || matches[1] == "--help") {}
             else cerr << "\033[1;91m" << "ERROR: " << "\033[0;91m" << "Wrong argument!\n\t| at \033[0;0m" << arg << "\n\033[0;91mSee output of --help command.\n\033[0;0m";
         }
         else input_name = arg;
@@ -196,7 +212,18 @@ int main(int argc, char* argv[]) {
             break;
         }
         else if (cmd == "help") {
-
+            std::ifstream help_args("./lib/help.txt");
+            if (!help_args.is_open()) {
+                cerr << "\033[1;91m" << "CRITICAL ERROR: help file is damaged or not flound! You need to reload it from github repository!\n\033[0;0m";
+                return 1;
+            }
+            else {
+                std::cout << "\033[2J\033[H";
+                str line;
+                while (std::getline(help_args, line)) {
+                    cout << line << "\n";
+                }
+            }
         }
         else {
             if (std::regex_match(cmd, matches, dump_pattern)) {

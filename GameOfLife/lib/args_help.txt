@@ -1,0 +1,25 @@
+Possible arguments:
+  --help - displays help about possible launch options
+  *In interactive mode, enter 'help' for assistance.
+
+  Without arguments - opens the default file in interactive mode (./examples/glaider.txt)
+
+  With one argument. Opens a file in interactive mode:
+    - Path to the file to open
+    - -s/--source=path to the file
+  With three arguments. Calculates the field after -i iterations and saves it to a file.
+  Works without interactive mode:
+    - -s/--source=path to the file
+    - -i/--iterations=number of iterations for calculation
+    - -o/--output=path to the output file
+
+File format for reading:
+  #Life 1.06
+  
+  #N Universe Name (universe name, defaults to Unknown)
+  #R B{0,...,8}/S{0,...,8} (transition rules for a cell, B-birth, S-survival, defaults to B3/S23)
+  #S width height (!Required parameter! width and height of the field)
+  
+  row col (coordinates of a cell, space-separated)
+  ...
+

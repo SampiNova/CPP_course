@@ -1,0 +1,17 @@
+Help for interactive mode commands:
+    help - displays this help message
+
+    dump <Filename> - saves the currently open universe to a file at the specified path
+
+    *tick <n=number of iterations t=delay> - updates the field state n times (default n=1)
+        - n=0 - does not update the field state, only refreshes the output in the terminal
+        - t - sets the delay between transitions in milliseconds for real-time viewing of changes (recommended t=100-150, default t=0, i.e., only the final state after n iterations is displayed)
+    exit - exits the program
+
+*Examples of calling tick:
+    tick - perform one iteration
+    tick <n=1> - same as above
+    tick <n=100> - perform 100 iterations and display only the final state
+    tick <n=100 t=100> - perform 100 iterations with a 100 millisecond delay between each, displaying the intermediate states.
+    tick <n=0> - resets the output
+
