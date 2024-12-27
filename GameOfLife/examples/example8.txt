@@ -1,0 +1,6 @@
+#Life 1.06
+#N Fire_Spark
+#R B1/S23
+#S 25 25
+12 12
+

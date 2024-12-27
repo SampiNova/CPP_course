@@ -1,0 +1,6 @@
+#Life 1.06
+#N Growth_Seed
+#R B4567/S2
+#S 30 30
+15 15
+

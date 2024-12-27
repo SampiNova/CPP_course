@@ -1,8 +1,5 @@
 #include "../include/game_objects.hpp"
 #include <stdexcept>
-#include <thread>
-#include <chrono>
-
 
 ///////////////////////////////////
 //                               //
@@ -13,7 +10,7 @@
 Field::Field() {
     this->height = 3;
     this->width = 3;
-    this->field = field_type(9, 0);
+    this->field = field_type(9, false);
 }
 Field::~Field() {}
 Field::Field(const Field& f) {
@@ -25,7 +22,7 @@ Field::Field(int width, int height, bool value) {
     if (height < 3 || width < 3) {
         throw std::invalid_argument("Wrong field size");
     }
-    this->field = field_type(width * height, 0);
+    this->field = field_type(width * height, value);
     this->width = width;
     this->height = height;
 }
@@ -119,9 +116,6 @@ Universe::~Universe() {
     this->field = nullptr;
 }
 Universe::Universe(const Universe& u): ticks_cnt(0) {
-    if (this->field) {
-        delete this->field;
-    }
     this->name = u.get_name();
     this->birth = u.get_birth();
     this->survival = u.get_survival();

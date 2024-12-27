@@ -154,7 +154,8 @@ int main(int argc, char* argv[]) {
     }
     catch (std::invalid_argument err) {
         if (input_name != default) {
-            cerr << "\033[1;91m" << "ERROR: " << err.what();
+            cerr << "\033[1;91m" << "ERROR: " << err.what() << "\n";
+            uni = read_universe(default);
         }
         else {
             cerr << "\033[1;91m" << "ERROR: " << err.what() << "\n";
@@ -163,6 +164,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    cout << "\033[0;0m";
     if (input_name == default) {
         cout << "\033[0;96mDefault file will be opened.\n\033[0;0m";
     }
