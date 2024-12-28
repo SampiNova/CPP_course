@@ -107,12 +107,12 @@ class CSVParser
         protected:
             void increment()
             {
+                x_->next();
                 if (!x_->valid() || x_->err_)
                 {
                     x_ = nullptr;
                     return;
                 }
-                x_->next();
             }
         };    
         iterator begin() { return iterator{this}; }
@@ -174,11 +174,11 @@ class CSVParser
                 }
                 ss += c;
             }
-            if (file_.eof()) {
+            /*if (file_.eof()) {
                 err_ = true;
                 current_ = val{};
                 return;
-            }
+            }*/
             if (escaped) {
                 throw std::runtime_error("Parsing error. Escaped simvol was lost.");
             }
