@@ -75,8 +75,7 @@ std::tuple<Ts...> vector2tuple(std::vector<std::string> const& values) {
 
 template <typename... Args>
 class CSVParser
-{
-    private:
+{    private:
         using val = std::tuple<Args...>;
         std::ifstream& file_;
         val current_;
