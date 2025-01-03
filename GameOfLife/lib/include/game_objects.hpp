@@ -39,7 +39,7 @@ public:
      * @return None
      */
     Field(const Field& f);
-     /**
+    /**
      * @brief Parameterized constructor for Field class.
      *
      * @param width The width of the field.
@@ -79,7 +79,7 @@ public:
      * Coordinates are wrapped around if they are out of bounds.
      */
     bool at(int row, int col) const;
-     /**
+    /**
      * @brief Calculates the number of live neighbors for a given cell.
      *
      * @param row The row of the cell.
@@ -154,14 +154,14 @@ public:
      * @return None
      */
     ~Universe();
-     /**
+    /**
      * @brief Copy constructor for Universe class.
      *
      * @param u The Universe object to copy from.
      * @return None
      */
     Universe(const Universe& u);
-     /**
+    /**
      * @brief Parameterized constructor for Universe class.
      *
      * @param width The width of the field.
@@ -215,7 +215,7 @@ public:
      * @return The set of neighbor counts for a cell to survive.
      */
     int_set get_survival() const;
-     /**
+    /**
      * @brief Returns the reference to the field of the universe.
      *
      * @param None

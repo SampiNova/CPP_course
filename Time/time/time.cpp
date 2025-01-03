@@ -7,7 +7,6 @@
 //                                      //
 //////////////////////////////////////////
 
-
 void Watch::set_format(bool is24h) {
 	this->_24h_format = is24h;
 }
